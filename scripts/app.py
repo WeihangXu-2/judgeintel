@@ -15,9 +15,13 @@ import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent  # folder that contains app.py
+# Project root = directory that contains this file, unless it's /scripts/, then go up one
+THIS_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = THIS_DIR.parent if THIS_DIR.name == "scripts" else THIS_DIR
+
 ENV_PATH = PROJECT_ROOT / ".env"
 loaded = load_dotenv(dotenv_path=ENV_PATH, override=True)
+
 
 
 try:
@@ -162,7 +166,13 @@ def load_data_from_csv(csv_bytes: Optional[bytes], fallback_path: str) -> pd.Dat
     if csv_bytes is not None:
         df = pd.read_csv(pd.io.common.BytesIO(csv_bytes))
     else:
-        df = pd.read_csv(fallback_path)
+        p = Path(fallback_path)
+        if not p.exists():
+            raise FileNotFoundError(
+                f"Default CSV not found at: {p}. "
+                "Either upload a CSV in the sidebar, or set NCBC_CSV_PATH / include the data file in the repo."
+            )
+        df = pd.read_csv(p)
 
     # Normalize columns we rely on
     for col in [
@@ -559,7 +569,12 @@ with st.sidebar:
     use_upload = uploaded is not None
     st.caption(f"Default path: `{DEFAULT_CSV_PATH}` (set `NCBC_CSV_PATH` to override)")
 
-    df = load_data_from_csv(uploaded.getvalue() if use_upload else None, DEFAULT_CSV_PATH)
+    try:
+        df = load_data_from_csv(uploaded.getvalue() if use_upload else None, DEFAULT_CSV_PATH)
+    except FileNotFoundError as e:
+        st.error(str(e))
+        st.info("Upload the CSV in the sidebar to continue.")
+        st.stop()
 
     st.divider()
     st.header("Filters")
