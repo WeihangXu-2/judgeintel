@@ -1,0 +1,21 @@
+# secrets
+.env
+.secrets.toml
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.envrc
+
+# streamlit
+.streamlit/secrets.toml
+
+# mac
+.DS_Store
+
+# data (optional: see note below)
+data/
+*.parquet
+*.csv
