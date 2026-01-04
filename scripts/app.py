@@ -82,7 +82,7 @@ def llm_available() -> bool:
 # ----------------------------
 st.set_page_config(
     page_title="NCBC Judge Analytics",
-    page_icon="⚖️",
+    page_icon="inquire_logo-2.png",
     layout="wide",
 )
 
@@ -117,7 +117,7 @@ st.markdown(
 )
 
 
-with st.sidebar.expander("🔧 Debug: LLM config", expanded=False):
+with st.sidebar.expander("Debug: LLM config", expanded=False):
     base_url, api_key, model = resolve_llm_config()
     st.write("base_url:", base_url)
     st.write("model:", model)
@@ -589,7 +589,7 @@ except FileNotFoundError as e:
 # ----------------------------
 top_left, top_right = st.columns([1.4, 1.0], gap="large")
 with top_left:
-    st.markdown("## ⚖️ NCBC Judge Analytics")
+    st.markdown("## NCBC Judge Analytics")
     st.caption("Interactive analytics by judge, case type, outcomes, statutes, and time.")
 with top_right:
     st.markdown(
