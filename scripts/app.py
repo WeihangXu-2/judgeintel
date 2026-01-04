@@ -35,18 +35,49 @@ try:
 except Exception:
     requests = None
 
-
 def secret_get(key: str, default=None):
     """
     Safe secrets getter:
-    - returns st.secrets[key] if secrets.toml exists and key exists
+    - returns st.secrets.get(key) if secrets.toml exists and key exists
     - otherwise returns default (and never throws)
     """
     try:
-        # this will throw if no secrets.toml exists at all
         return st.secrets.get(key, default)
     except Exception:
         return default
+
+
+def resolve_llm_config():
+    """
+    Resolve LLM config from (in order):
+      env: DUKE_LLM_* -> LITELLM_* -> OPENAI_*
+      secrets: same order
+    Returns (base_url, api_key, model)
+    """
+    def pick(*keys, default=""):
+        # env first
+        for k in keys:
+            v = os.getenv(k)
+            if v:
+                return v
+        # then secrets
+        for k in keys:
+            v = secret_get(k)
+            if v:
+                return v
+        return default
+
+    base_url = pick("DUKE_LLM_BASE_URL", "LITELLM_BASE_URL", "OPENAI_BASE_URL", default="")
+    api_key  = pick("DUKE_LLM_API_KEY",  "LITELLM_API_KEY",  "OPENAI_API_KEY",  default="")
+    model    = pick("DUKE_LLM_MODEL",    "LITELLM_MODEL",    "OPENAI_MODEL",    default="GPT 4.1 Mini")
+    return base_url, api_key, model
+
+
+def llm_available() -> bool:
+    if requests is None:
+        return False
+    base_url, api_key, _ = resolve_llm_config()
+    return bool(base_url and api_key)
 
 # ----------------------------
 # Page config
@@ -58,32 +89,11 @@ st.set_page_config(
 )
 
 with st.sidebar.expander("🔧 Debug: LLM config", expanded=False):
-    resolved_base = (
-        os.getenv("LITELLM_BASE_URL")
-        or os.getenv("OPENAI_BASE_URL")
-        or secret_get("LITELLM_BASE_URL")
-        or secret_get("OPENAI_BASE_URL")
-        or ""
-    )
-    resolved_model = (
-        os.getenv("LITELLM_MODEL")
-        or os.getenv("OPENAI_MODEL")
-        or secret_get("LITELLM_MODEL")
-        or secret_get("OPENAI_MODEL")
-        or ""
-    )
-    resolved_key = (
-        os.getenv("LITELLM_API_KEY")
-        or os.getenv("OPENAI_API_KEY")
-        or secret_get("LITELLM_API_KEY")
-        or secret_get("OPENAI_API_KEY")
-        or ""
-    )
-
+    base_url, api_key, model = resolve_llm_config()
     st.write("loaded .env:", bool(loaded), "env path:", str(ENV_PATH))
-    st.write("base_url:", resolved_base)
-    st.write("model:", resolved_model)
-    st.write("api_key length:", len(resolved_key))
+    st.write("base_url:", base_url)
+    st.write("model:", model)
+    st.write("api_key length:", len(api_key or ""))
 
 
 # ----------------------------
@@ -324,57 +334,16 @@ def heatmap_judge_topic_outcome(df: pd.DataFrame, max_judges: int = 12, max_topi
 # ----------------------------
 # AI Overview (OpenAI-compatible via LiteLLM or any base_url)
 # ----------------------------
-def llm_available() -> bool:
-    if requests is None:
-        return False
-
-    api_key = (
-        os.getenv("LITELLM_API_KEY")
-        or os.getenv("OPENAI_API_KEY")
-        or secret_get("LITELLM_API_KEY")
-        or secret_get("OPENAI_API_KEY")
-    )
-    base_url = (
-        os.getenv("LITELLM_BASE_URL")
-        or os.getenv("OPENAI_BASE_URL")
-        or secret_get("LITELLM_BASE_URL")
-        or secret_get("OPENAI_BASE_URL")
-    )
-    return bool(api_key and base_url)
-
-
-
 def call_openai_compatible_chat(prompt: str) -> str:
-    """
-    Calls an OpenAI-compatible /v1/chat/completions endpoint.
-
-    Configure in env or Streamlit secrets:
-      - LITELLM_BASE_URL (e.g. https://litellm.oit.duke.edu/v1)  OR OPENAI_BASE_URL
-      - LITELLM_API_KEY  OR OPENAI_API_KEY
-      - LITELLM_MODEL (optional; default GPT 4.1 Mini-ish) OR OPENAI_MODEL
-    """
     if requests is None:
         raise RuntimeError("requests not installed")
 
-    base_url = (
-        os.getenv("LITELLM_BASE_URL")
-        or os.getenv("OPENAI_BASE_URL")
-        or secret_get("LITELLM_BASE_URL")
-        or secret_get("OPENAI_BASE_URL")
-    )
-    api_key = (
-        os.getenv("LITELLM_API_KEY")
-        or os.getenv("OPENAI_API_KEY")
-        or secret_get("LITELLM_API_KEY")
-        or secret_get("OPENAI_API_KEY")
-    )
-    model = (
-        os.getenv("LITELLM_MODEL")
-        or os.getenv("OPENAI_MODEL")
-        or secret_get("LITELLM_MODEL")
-        or secret_get("OPENAI_MODEL")
-        or "GPT 4.1 Mini"
-    )
+    base_url, api_key, model = resolve_llm_config()
+
+    if not base_url:
+        raise RuntimeError("Missing base_url (set DUKE_LLM_BASE_URL or LITELLM_BASE_URL).")
+    if not api_key:
+        raise RuntimeError("Missing api_key (set DUKE_LLM_API_KEY or LITELLM_API_KEY).")
 
     url = base_url.rstrip("/") + "/chat/completions"
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
