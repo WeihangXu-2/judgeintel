@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]  # scripts/ -> project root
+PROJECT_ROOT = Path(__file__).resolve().parent  # folder that contains app.py
 ENV_PATH = PROJECT_ROOT / ".env"
 loaded = load_dotenv(dotenv_path=ENV_PATH, override=True)
 
@@ -52,6 +52,34 @@ st.set_page_config(
     page_icon="⚖️",
     layout="wide",
 )
+
+with st.sidebar.expander("🔧 Debug: LLM config", expanded=False):
+    resolved_base = (
+        os.getenv("LITELLM_BASE_URL")
+        or os.getenv("OPENAI_BASE_URL")
+        or secret_get("LITELLM_BASE_URL")
+        or secret_get("OPENAI_BASE_URL")
+        or ""
+    )
+    resolved_model = (
+        os.getenv("LITELLM_MODEL")
+        or os.getenv("OPENAI_MODEL")
+        or secret_get("LITELLM_MODEL")
+        or secret_get("OPENAI_MODEL")
+        or ""
+    )
+    resolved_key = (
+        os.getenv("LITELLM_API_KEY")
+        or os.getenv("OPENAI_API_KEY")
+        or secret_get("LITELLM_API_KEY")
+        or secret_get("OPENAI_API_KEY")
+        or ""
+    )
+
+    st.write("loaded .env:", bool(loaded), "env path:", str(ENV_PATH))
+    st.write("base_url:", resolved_base)
+    st.write("model:", resolved_model)
+    st.write("api_key length:", len(resolved_key))
 
 
 # ----------------------------
@@ -348,7 +376,7 @@ def call_openai_compatible_chat(prompt: str) -> str:
             {"role": "user", "content": prompt},
         ],
     }
-    resp = requests.post(url, headers=headers, data=json.dumps(body), timeout=60)
+    resp = requests.post(url, headers=headers, json=body, timeout=60)
     resp.raise_for_status()
     j = resp.json()
     return j["choices"][0]["message"]["content"].strip()
