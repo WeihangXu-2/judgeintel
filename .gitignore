@@ -14,8 +14,3 @@ venv/
 
 # mac
 .DS_Store
-
-# data (optional: see note below)
-data/
-*.parquet
-*.csv

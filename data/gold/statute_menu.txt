@@ -1,0 +1,233 @@
+[STATUTE=NCGS 75-1.1]
+aliases=udtpa; unfair trade; deceptive practices; consumer fraud; misrepresentation; omission; unfair competition; treble
+summary=Core North Carolina UDTPA. Prohibits unfair or deceptive acts in or affecting commerce (broadly defined). A violation triggers treble damages (§ 75-16) and potential fee shifting (§ 75-16.1).
+
+[STATUTE=NCGS 75-16]
+aliases=udtpa damages; treble damages; triple damages; remedy; automatic trebling
+summary=Remedy provision for § 75-1.1. Requires the court to treble actual damages once liability is found; operates with § 75-16.1 on fees.
+
+[STATUTE=NCGS 75-16.1]
+aliases=udtpa fees; attorney fees; fee shifting; willful violation; unjustified refusal; frivolous action
+summary=Fee-shifting in UDTPA. Fees to prevailing plaintiff for willful violation and unjustified refusal to resolve; fees to prevailing defendant for frivolous or malicious cases.
+
+[STATUTE=NCGS 7A-45.4]
+aliases=business court designation; complex business; mandatory designation; chief business court judge
+summary=Lists categories requiring NC Business Court designation (corp/LLC governance, securities, trade secrets, high-value contracts, etc.) and sets process/timing for designation and review.
+
+[STATUTE=NCGS 1-75.4]
+aliases=long arm; personal jurisdiction; nonresident; minimum contacts; due process
+summary=North Carolina long-arm statute providing bases for jurisdiction over nonresidents (acts or injury in NC, property ties, contracts to supply in NC), interpreted to due-process limits.
+
+[STATUTE=NCGS 1A-1 Rule 12(b)(6)]
+aliases=motion to dismiss; failure to state a claim; pleading sufficiency; complaint dismissed
+summary=Tests legal sufficiency of the complaint; dismissal when facts taken as true do not state a claim on which relief can be granted.
+
+[STATUTE=NCGS 1A-1 Rule 56]
+aliases=summary judgment; no genuine issue; material fact; judgment as matter of law
+summary=Authorizes judgment where no genuine dispute of material fact exists and the movant is entitled to judgment as a matter of law.
+
+[STATUTE=NCGS 1D-15]
+aliases=punitive damages; clear and convincing; aggravating factor; fraud; malice; willful or wanton
+summary=Sets NC punitive-damages standard: compensatory liability plus aggravating factor proven by clear and convincing evidence; Chapter 1D caps generally apply.
+
+[STATUTE=NCGS 55-16-01]
+aliases=corporate records; required documents; bylaws; shareholder list; minutes
+summary=Specifies baseline corporate records to maintain (charter, bylaws, minutes, shareholder records); underpins inspection rights in § 55-16-02.
+
+[STATUTE=NCGS 55-16-02]
+aliases=books and records; shareholder inspection; inspection rights; proper purpose; transparency
+summary=Grants qualified shareholders inspection/copying of specified corporate records at reasonable times for proper purposes; courts may compel and allocate costs.
+
+[STATUTE=NCGS 55-8-30]
+aliases=director duty; fiduciary duty; standard of conduct; good faith; ordinary prudence; best interests
+summary=Directors must act in good faith, with ordinary prudence, and in the corporation’s best interests; reliance protections apply.
+
+[STATUTE=NCGS 55-8-31]
+aliases=conflict transactions; self-dealing; disclosure; fairness; cleansing vote
+summary=Director conflict transactions not voidable if fully disclosed and approved by qualified decisionmakers or if fair to the corporation.
+
+[STATUTE=NCGS 55-8-42]
+aliases=officer duty; fiduciary duty of officers; standard of conduct; reliance
+summary=Officer duties parallel directors’ standards, tailored to role; recognizes good-faith reliance on reliable information.
+
+[STATUTE=NCGS 55-14-30]
+aliases=judicial dissolution; corporate deadlock; oppression; waste; receivership
+summary=Authorizes dissolution for deadlock, illegal/oppressive acts, waste, insolvency, or abuse of authority; court may supervise winding up and appoint receivers.
+
+[STATUTE=NCGS 55A-7-40]
+aliases=nonprofit inspection; member rights; nonprofit derivative; governance
+summary=Provides nonprofit members inspection/enforcement tools and, in proper cases, derivative-action pathways with potential cost allocation.
+
+[STATUTE=NCGS 55D-15]
+aliases=entity names; corporate name; llc name; distinguishability; prohibited terms
+summary=Regulates corporate/LLC name availability and prohibited terms; used in disputes over confusingly similar names and filings.
+
+[STATUTE=NCGS 57D-1-03]
+aliases=llc definitions; operating agreement; member; manager; company official
+summary=Defines key terms for the NC LLC Act (e.g., operating agreement, member, manager) governing rights and duties across Chapter 57D.
+
+[STATUTE=NCGS 57D-3-04]
+aliases=llc member information rights; llc records; inspection; transparency
+summary=Entitles LLC members to inspect specified company records at reasonable times, subject to statutory/operating-agreement limits.
+
+[STATUTE=NCGS 57D-3-21]
+aliases=llc fiduciary duty; duty of loyalty; duty of care; good faith; reliance
+summary=Sets standards of conduct for LLC managers/officials—good faith and ordinary prudence in the LLC’s best interests, as modified by the operating agreement.
+
+[STATUTE=NCGS 66-152]
+aliases=trade secret definition; misappropriation definition; secrecy measures; value from secrecy
+summary=Defines “trade secret,” “misappropriation,” and related concepts under the Trade Secrets Protection Act.
+
+[STATUTE=NCGS 66-153]
+aliases=trade secret civil action; misappropriation claim; injunction; damages
+summary=Creates a private cause of action for trade-secret misappropriation with injunctive and monetary remedies.
+
+[STATUTE=NCGS 66-154]
+aliases=trade secret damages; exemplary damages; attorneys’ fees; willful and malicious
+summary=Allows recovery of actual loss/unjust enrichment; exemplary damages for willful/malicious misappropriation; fee-shifting in specified circumstances.
+
+[STATUTE=NCGS 66-155]
+aliases=protective orders; confidentiality; sealing; limited access
+summary=Authorizes protective measures to preserve secrecy of alleged trade secrets during litigation.
+
+[STATUTE=NCGS 78A-8]
+aliases=securities fraud; material misstatement; omission; offering; sales literature; PPM
+summary=Antifraud provision of the NC Securities Act; prohibits untrue statements or omissions of material fact in offers/sales of securities.
+
+[STATUTE=NCGS 78A-56]
+aliases=securities civil liability; rescission; control person; aider liability; blue-sky
+summary=Creates civil liability/rescission for unlawful offers/sales or material misstatements; extends to control persons and material aiders with defenses/time limits.
+
+[STATUTE=NCGS 95-25.22]
+aliases=wage claim; unpaid wages; wage and hour; liquidated damages; fee shifting
+summary=Remedies under the NC Wage and Hour Act, including unpaid wages, potential liquidated damages, and attorney-fee provisions.
+
+[STATUTE=NCGS 105-241.16]
+aliases=tax appeal; judicial review; contested case; business court tax; prepayment; bond
+summary=Provides superior court/Business Court judicial review of certain NC tax disputes post-administration, subject to prerequisites like prepayment or bond.
+
+[STATUTE=NCGS 14-458]
+aliases=computer trespass; unauthorized access; data alteration; deletion; false pretenses
+summary=Criminalizes unauthorized access that causes damage, alters/erases data, or obtains services/property by false pretenses; sometimes arises alongside civil IT-misuse claims.
+
+[STATUTE=NCGS 25-1-103]
+aliases=ucc supplementary principles; equity; fraud; duress; estoppel
+summary=Incorporates general law and equity to supplement the UCC where not displaced.
+
+[STATUTE=NCGS 25-1-302]
+aliases=ucc variation by agreement; modify by agreement; good faith; reasonableness
+summary=Allows parties to vary many UCC provisions by agreement, subject to good faith and reasonableness.
+
+[STATUTE=NCGS 25-2-204]
+aliases=ucc contract formation; sale of goods; open terms; intent
+summary=Permits flexible contract formation for sales of goods despite open terms if the parties intended to contract.
+
+[STATUTE=NCGS 25-2-209]
+aliases=ucc modification; waiver; no-oral-modification; consideration not required
+summary=Permits contract modification without consideration (good faith required); addresses no-oral-modification clauses, waiver, and retraction.
+
+[STATUTE=NCGS 25-2-316]
+aliases=warranty disclaimer; merchantability; fitness; conspicuous
+summary=Rules for excluding/modifying implied warranties; requires specific language and conspicuousness.
+
+[STATUTE=NCGS 25-2-609]
+aliases=adequate assurance; insecurity; suspend performance; repudiation
+summary=Allows a party with reasonable grounds for insecurity to demand adequate assurance and suspend performance; failure to assure may be repudiation.
+
+[STATUTE=NCGS 25-2-612]
+aliases=installment contract; substantial impairment; cancellation; nonconforming installment
+summary=Defines when defects in installments substantially impair the whole contract, permitting cancellation or other remedies.
+
+[STATUTE=NCGS 25-2-718]
+aliases=liquidated damages; penalty; buyer deposit; offset
+summary=Enforces reasonable liquidated damages and limits penalties; addresses buyer deposits and offsets.
+
+[STATUTE=NCGS 25-2-725]
+aliases=ucc limitations; four-year statute; accrual at breach; shorten by agreement
+summary=Sets a 4-year limitations period for sales-of-goods claims (may be reduced by agreement to ≥1 year), generally accruing at breach.
+
+[STATUTE=NCGS 25-9-611]
+aliases=article 9 notice; collateral disposition; default; secured party sale
+summary=Requires secured parties to give reasonable authenticated notice before disposing of collateral after default; affects deficiency and commercial reasonableness.
+
+[STATUTE=NCGS 39-23.1]
+aliases=uvta definitions; asset; transfer; insolvency; creditor avoidance
+summary=Defines key UVTA terms (asset, transfer, insolvency) framing creditor avoidance claims.
+
+[STATUTE=NCGS 39-23.4]
+aliases=uvta transfers; badges of fraud; actual intent; constructive fraud; undervalue; insider transfer
+summary=Core UVTA liability: transfers voidable as to present/future creditors based on actual intent or constructive fraud.
+
+[STATUTE=NCGS 39-23.7]
+aliases=uvta remedies; avoidance; injunction; attachment; levy; receiver
+summary=Authorizes avoidance, injunctions, attachment, and other relief to protect creditor recovery and enforce judgments.
+
+[STATUTE=NCGS 39-23.8]
+aliases=uvta defenses; good-faith transferee; value given; bona fide purchaser; credits
+summary=Provides transferee defenses/credits (good faith, value) and allocates burdens to prevent over-recovery.
+
+[STATUTE=NCGS 20-351.8]
+aliases=lemon law; new motor vehicle warranties; refund; replacement; nonconformity
+summary=Consumer remedies for persistent nonconformities under the NC New Motor Vehicles Warranties Act; may intersect with Business Court matters involving franchised dealers/suppliers.
+
+[STATUTE=NCGS 55-7-40]
+aliases=derivative action; standing; demand; shareholder suit
+summary=Governs shareholder derivative proceedings in corporations, including standing and demand prerequisites.
+
+[STATUTE=NCGS 55-7-41]
+aliases=stay of discovery; derivative; demand futility
+summary=Authorizes stays of discovery pending motion practice in derivative cases.
+
+[STATUTE=NCGS 55-7-42]
+aliases=special litigation committee; SLC; independent directors
+summary=Provides for appointment and effect of an independent committee’s determination in derivative actions.
+
+[STATUTE=NCGS 55-7-43]
+aliases=dismissal; derivative; independent directors; SLC report
+summary=Standards for court dismissal based on independent director/SLC determinations.
+
+[STATUTE=NCGS 55-7-44]
+aliases=expenses; fees; indemnification; derivative
+summary=Addresses payment of expenses and fee awards in derivative suits.
+
+[STATUTE=NCGS 55-7-45]
+aliases=security for expenses; bonds; derivative
+summary=Security for expenses in derivative actions (as applicable).
+
+[STATUTE=NCGS 55-7-46]
+aliases=settlement; compromise; court approval; notice
+summary=Requires court approval and notice for settlement or dismissal of derivative actions.
+
+[STATUTE=NCGS 55-7-47]
+aliases=judgments; binding effect; derivative
+summary=Specifies the effect of judgments in derivative proceedings.
+
+[STATUTE=NCGS 55-7-48]
+aliases=definitions; derivative; corporation
+summary=Definitions for corporate derivative subchapter.
+
+[STATUTE=NCGS 57D-8-01]
+aliases=LLC derivative; standing; member action
+summary=Authorizes and governs LLC derivative actions brought by members.
+
+[STATUTE=NCGS 57D-8-02]
+aliases=demand; demand futility; LLC derivative
+summary=Demand requirements and exceptions for LLC derivative suits.
+
+[STATUTE=NCGS 57D-8-03]
+aliases=stay; discovery; LLC derivative
+summary=Stay of proceedings/discovery while motions relating to derivative status are decided.
+
+[STATUTE=NCGS 57D-8-04]
+aliases=special litigation committee; SLC; LLC
+summary=Independent committee evaluation and the effect of its determinations.
+
+[STATUTE=NCGS 57D-8-05]
+aliases=dismissal; settlement; court approval; LLC derivative
+summary=Dismissal/settlement standards and court approval requirements.
+
+[STATUTE=NCGS 57D-8-06]
+aliases=fees; expenses; security; LLC derivative
+summary=Expenses, fees, and security in LLC derivative actions.
+
+
