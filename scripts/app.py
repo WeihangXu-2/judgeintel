@@ -12,15 +12,11 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
-from dotenv import load_dotenv
 from pathlib import Path
 
 # Project root = directory that contains this file, unless it's /scripts/, then go up one
 THIS_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = THIS_DIR.parent if THIS_DIR.name == "scripts" else THIS_DIR
-
-ENV_PATH = PROJECT_ROOT / ".env"
-loaded = load_dotenv(dotenv_path=ENV_PATH, override=True)
 
 
 
@@ -90,7 +86,6 @@ st.set_page_config(
 
 with st.sidebar.expander("🔧 Debug: LLM config", expanded=False):
     base_url, api_key, model = resolve_llm_config()
-    st.write("loaded .env:", bool(loaded), "env path:", str(ENV_PATH))
     st.write("base_url:", base_url)
     st.write("model:", model)
     st.write("api_key length:", len(api_key or ""))
@@ -530,19 +525,17 @@ def sample_similar_cases(df_view: pd.DataFrame, topics: list, n: int = 8) -> pd.
 # ----------------------------
 # Sidebar: load + filters
 # ----------------------------
-st.title("⚖️ NCBC Judge Analytics Dashboard")
+st.title("NCBC Judge Analytics Dashboard")
 
 with st.sidebar:
     st.header("Data")
-    uploaded = st.file_uploader("Upload CSV (optional)", type=["csv"])
-    use_upload = uploaded is not None
-    st.caption(f"Default path: `{DEFAULT_CSV_PATH}` (set `NCBC_CSV_PATH` to override)")
 
     try:
-        df = load_data_from_csv(uploaded.getvalue() if use_upload else None, DEFAULT_CSV_PATH)
+        # Hosted mode: always load the packaged CSV from the repo
+        df = load_data_from_csv(None, DEFAULT_CSV_PATH)
     except FileNotFoundError as e:
-        st.error(str(e))
-        st.info("Upload the CSV in the sidebar to continue.")
+        st.error("Hosted dataset not found in the app bundle.")
+        st.code(str(e))
         st.stop()
 
     st.divider()
