@@ -13,6 +13,8 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 from pathlib import Path
+from io import BytesIO
+
 
 # Project root = directory that contains this file, unless it's /scripts/, then go up one
 THIS_DIR = Path(__file__).resolve().parent
@@ -83,6 +85,37 @@ st.set_page_config(
     page_icon="⚖️",
     layout="wide",
 )
+
+# ----------------------------
+# Minimal modern styling
+# ----------------------------
+st.markdown(
+    """
+    <style>
+      /* tighter layout */
+      .block-container { padding-top: 1.2rem; padding-bottom: 2rem; }
+
+      /* nicer headers */
+      h1, h2, h3 { letter-spacing: -0.02em; }
+
+      /* KPI cards: make metrics look like tiles */
+      div[data-testid="metric-container"] {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.10);
+        padding: 14px 14px;
+        border-radius: 14px;
+      }
+
+      /* tabs look a bit cleaner */
+      button[data-baseweb="tab"] { font-size: 0.95rem; padding-top: 10px; padding-bottom: 10px; }
+
+      /* expanders slightly nicer */
+      details { border-radius: 12px; overflow: hidden; }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 
 with st.sidebar.expander("🔧 Debug: LLM config", expanded=False):
     base_url, api_key, model = resolve_llm_config()
@@ -169,7 +202,7 @@ DEFAULT_CSV_PATH = os.getenv(
 @st.cache_data(show_spinner=False)
 def load_data_from_csv(csv_bytes: Optional[bytes], fallback_path: str) -> pd.DataFrame:
     if csv_bytes is not None:
-        df = pd.read_csv(pd.io.common.BytesIO(csv_bytes))
+        df = pd.read_csv(BytesIO(csv_bytes))
     else:
         p = Path(fallback_path)
         if not p.exists():
@@ -260,9 +293,17 @@ def apply_filters(
 def barh_counts(title: str, series: pd.Series, xlabel: str = "Count"):
     fig = plt.figure()
     ax = fig.add_subplot(111)
+
     series = series.sort_values(ascending=True)
+
     ax.barh(series.index.astype(str), series.values)
     ax.set_title(title)
+
+    # cleaner look
+    ax.grid(axis="x", alpha=0.25)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
     ax.set_xlabel(xlabel)
     fig.tight_layout()
     st.pyplot(fig)
@@ -275,15 +316,23 @@ def line_time_counts(df: pd.DataFrame, title: str):
         return
     tmp["month"] = tmp["published_dt"].dt.to_period("M").dt.to_timestamp()
     counts = tmp.groupby("month").size().sort_index()
+
     fig = plt.figure()
     ax = fig.add_subplot(111)
+
     ax.plot(counts.index, counts.values, marker="o")
     ax.set_title(title)
+
+    ax.grid(alpha=0.25)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
     ax.set_xlabel("Month")
     ax.set_ylabel("Cases")
     fig.autofmt_xdate()
     fig.tight_layout()
     st.pyplot(fig)
+
 
 
 def heatmap_judge_topic_outcome(df: pd.DataFrame, max_judges: int = 12, max_topics: int = 12):
@@ -525,27 +574,48 @@ def sample_similar_cases(df_view: pd.DataFrame, topics: list, n: int = 8) -> pd.
 # ----------------------------
 # Sidebar: load + filters
 # ----------------------------
-st.title("NCBC Judge Analytics Dashboard")
+# ----------------------------
+# Load data (hosted)
+# ----------------------------
+try:
+    df = load_data_from_csv(None, DEFAULT_CSV_PATH)
+except FileNotFoundError as e:
+    st.error("Hosted dataset not found in the app bundle.")
+    st.code(str(e))
+    st.stop()
 
+# ----------------------------
+# Header (now df exists)
+# ----------------------------
+top_left, top_right = st.columns([1.4, 1.0], gap="large")
+with top_left:
+    st.markdown("## ⚖️ NCBC Judge Analytics")
+    st.caption("Interactive analytics by judge, case type, outcomes, statutes, and time.")
+with top_right:
+    st.markdown(
+        f"""
+        <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:6px;">
+          <div style="padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06);">
+            Dataset: <b>{len(df):,}</b> cases
+          </div>
+          <div style="padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06);">
+            LLM: <b>{"on" if llm_available() else "off"}</b>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+# ----------------------------
+# Sidebar: filters only (no df loading here anymore)
+# ----------------------------
 with st.sidebar:
-    st.header("Data")
-
-    try:
-        # Hosted mode: always load the packaged CSV from the repo
-        df = load_data_from_csv(None, DEFAULT_CSV_PATH)
-    except FileNotFoundError as e:
-        st.error("Hosted dataset not found in the app bundle.")
-        st.code(str(e))
-        st.stop()
-
-    st.divider()
     st.header("Filters")
 
     judge_list = ["All"] + sorted(df["judge"].dropna().unique().tolist())
     county_list = ["All"] + sorted(df["county"].fillna("").astype(str).unique().tolist())
     outcome_list = ["All"] + sorted(df["outcome_primary"].dropna().unique().tolist())
 
-    # topics unique
     ex_all_topics = df[["topics_list"]].explode("topics_list")
     ex_all_topics = ex_all_topics[ex_all_topics["topics_list"].notna() & (ex_all_topics["topics_list"] != "")]
     topic_list = ["All"] + sorted(ex_all_topics["topics_list"].unique().tolist()) if not ex_all_topics.empty else ["All"]
@@ -555,7 +625,6 @@ with st.sidebar:
     outcome_sel = st.selectbox("Outcome (primary)", outcome_list, index=0)
     county_sel = st.selectbox("County", county_list, index=0)
 
-    # Date range slider: based on available dates
     dt_min = df["published_dt"].min()
     dt_max = df["published_dt"].max()
     if pd.isna(dt_min) or pd.isna(dt_max):
@@ -570,8 +639,8 @@ with st.sidebar:
         )
         date_range = (pd.Timestamp(start_dt), pd.Timestamp(end_dt))
 
-    # Confidence filter
     min_conf = st.slider("Min judge confidence (keep NaNs)", 0.0, 1.0, 0.0, 0.01)
+
 
 filtered = apply_filters(
     df=df,
@@ -604,40 +673,78 @@ st.divider()
 # ----------------------------
 # Tabs
 # ----------------------------
+# ----------------------------
+# Tabs
+# ----------------------------
 tab1, tab2, tab3, tab4 = st.tabs(["Overview", "Judge Explorer", "Case Type Explorer", "AI Overview"])
-st.caption(f"LLM active: {llm_available()}")
 
 # ===== Overview =====
 with tab1:
-    left, right = st.columns([1.1, 1.0], gap="large")
+    st.caption(f"LLM active: {llm_available()}")
 
-    with left:
-        st.subheader("Outcome distribution")
+    # --- Summary row (modern dashboard feel) ---
+    s1, s2 = st.columns([1.2, 1.0], gap="large")
+
+    with s1:
+        st.markdown("### Snapshot")
         if len(filtered) == 0:
             st.info("No cases match the current filters.")
         else:
-            barh_counts("Outcome (primary)", safe_value_counts(filtered["outcome_primary"], 12))
+            known_dates = filtered["published_dt"].dropna()
+            span = f"{known_dates.min().date()} → {known_dates.max().date()}" if not known_dates.empty else "—"
 
-        st.subheader("Cases over time")
-        line_time_counts(filtered, "Cases per month (published date)")
+            top_j = safe_value_counts(filtered["judge"], 1)
+            top_o = safe_value_counts(filtered["outcome_primary"], 1)
+
+            st.markdown(
+                f"""
+                <div style="border:1px solid rgba(255,255,255,.10); background:rgba(255,255,255,.04);
+                            padding:14px; border-radius:14px;">
+                  <div style="font-size:0.95rem; opacity:0.85;">
+                    <b>{len(filtered):,}</b> cases in view · Date coverage: <b>{span}</b>
+                  </div>
+                  <div style="margin-top:10px; font-size:0.95rem; opacity:0.85;">
+                    Most frequent judge: <b>{top_j.index[0] if len(top_j) else "—"}</b> ·
+                    Most common outcome: <b>{top_o.index[0] if len(top_o) else "—"}</b>
+                  </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+    with s2:
+        st.markdown("### What changes when you filter?")
+        st.caption("Use the sidebar to narrow by judge/topic/outcome/county/date; charts update instantly.")
+
+    left, right = st.columns([1.1, 1.0], gap="large")
+
+    with left:
+        with st.expander("Outcome distribution", expanded=True):
+            if len(filtered) == 0:
+                st.info("No cases match the current filters.")
+            else:
+                barh_counts("Outcome (primary)", safe_value_counts(filtered["outcome_primary"], 12))
+
+        with st.expander("Cases over time", expanded=True):
+            line_time_counts(filtered, "Cases per month (published date)")
 
     with right:
-        st.subheader("Top judges")
-        if len(filtered):
-            barh_counts("Judges (top 12)", safe_value_counts(filtered["judge"], 12))
-        else:
-            st.info("No cases to display.")
+        with st.expander("Top judges", expanded=True):
+            if len(filtered):
+                barh_counts("Judges (top 12)", safe_value_counts(filtered["judge"], 12))
+            else:
+                st.info("No cases to display.")
 
-        st.subheader("Top topics (case types)")
-        ex = filtered[["topics_list"]].explode("topics_list")
-        ex = ex[ex["topics_list"].notna() & (ex["topics_list"] != "")]
-        if not ex.empty:
-            barh_counts("Topics (top 12)", ex["topics_list"].value_counts().head(12))
-        else:
-            st.info("No topics available in current selection.")
+        with st.expander("Top topics (case types)", expanded=True):
+            ex = filtered[["topics_list"]].explode("topics_list")
+            ex = ex[ex["topics_list"].notna() & (ex["topics_list"] != "")]
+            if not ex.empty:
+                barh_counts("Topics (top 12)", ex["topics_list"].value_counts().head(12))
+            else:
+                st.info("No topics available in current selection.")
 
-        st.subheader("Judge × Topic matrix")
-        heatmap_judge_topic_outcome(filtered)
+        with st.expander("Judge × Topic matrix", expanded=False):
+            heatmap_judge_topic_outcome(filtered)
 
 
 # ===== Judge Explorer =====
